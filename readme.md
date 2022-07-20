@@ -20,7 +20,7 @@ exports.pool = new Pool({
 
 - Start the API: `node api.js`
 - API runs on port 5152
-- Switch to release branch: `git checkout release`
+- NOTE: Switch to release branch: `git checkout release`
 - Try test endpoint: `GET http://localhost:5152/test`
 
 # Updates
