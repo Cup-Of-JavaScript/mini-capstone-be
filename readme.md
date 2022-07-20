@@ -4,6 +4,20 @@ Express API for Todo List React web application.
 # Getting Starting
 - Clone this repo
 - Install the dependencies: `npm install`
+- Create `postgres-pool.js` file (replace xxx):
+
+```
+const { Pool } = require("pg");
+
+exports.pool = new Pool({
+    user: "postgres",
+    password: "xxx",
+    database: "xxx",
+    host: "xxx",
+    port: 5432,
+  });
+```
+
 - Start the API: `node api.js`
 - API runs on port 5152
 - Switch to release branch: `git checkout release`
