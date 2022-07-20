@@ -40,6 +40,11 @@ app.get('/ex1/persons/:id', cors(corsOptions), async (req, res) => {
     // res.send(<YOUR OBJECT HERE>);
 });
 
+
+//
+// GET: /test
+//
+
 app.get('/test', cors(corsOptions), async (req, res) => { 
     let r = await dataAccess.test();
     res.send(r);
