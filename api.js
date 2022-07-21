@@ -97,6 +97,15 @@ app.post('/todolists', cors(corsOptions), async (req, res) => {
     res.send(result);
 });
 
+//POST /todolists/:id/tasks
+app.post('/todolists/:id/tasks', cors(corsOptions), async (req, res) => { 
+    let newTask = req.body;
+    let newTodoListId = req.params['id'];
+    let r = await dataAccess.createTask(newTask.task_name, newTodoListId);
+    res.send(r);
+    res.status(201);
+});
+
 app.listen(PORT, () => {
     console.log(`Express API running on port: ${PORT}`);
 });
