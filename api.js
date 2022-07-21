@@ -75,6 +75,20 @@ app.get('/todolists/', cors(corsOptions), async (req, res) => {
     }
 });
 
+// DELETE /todolists/{id}
+app.delete('/todolists/:id', cors(corsOptions), async (req, res) => { 
+    let todolistId = req.params['id']
+    let result1 = await dataAccess.deleteTodoList(todolistId)
+    let result2 = await dataAccess.deleteTodoListInTask(todolistId)
+    //res.send("OK");
+    if (result1.length > 0) {
+        res.send("OK")
+    } else {
+        res.status(404)
+        res.end()
+    }
+   });
+
 app.listen(PORT, () => {
     console.log(`Express API running on port: ${PORT}`);
 });
