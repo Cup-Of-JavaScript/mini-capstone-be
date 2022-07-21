@@ -31,6 +31,7 @@ app.post('/todolists/:id/tasks', cors(corsOptions), async (req, res) => {
     let newTodoListId = req.params['id'];
     let r = await dataAccess.createTask(newTask.task_name, newTodoListId);
     res.send(r);
+    res.status(201);
 });
 
 
