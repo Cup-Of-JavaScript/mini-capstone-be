@@ -93,6 +93,7 @@ app.delete('/todolists/:id', cors(corsOptions), async (req, res) => {
 app.post('/todolists', cors(corsOptions), async (req, res) => { 
     let newTodolist = req.body;
     let result = await dataAccess.newTodolist(newTodolist.todolistId, newTodolist.todolistName)
+    res.status(201)
     res.send(result);
 });
 
