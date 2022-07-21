@@ -63,6 +63,18 @@ app.get('/todolists/:id/tasks', cors(corsOptions), async (req, res) => {
     }
 });
 
+//GET:/todolists
+app.get('/todolists/', cors(corsOptions), async (req, res) => {
+    let result = await dataAccess.getTodoLists()
+    if (result.length > 0) {
+        res.send(result)
+    } else {
+        res.status(204)
+        res.end()
+
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Express API running on port: ${PORT}`);
 });

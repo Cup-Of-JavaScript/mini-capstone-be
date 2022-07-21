@@ -6,8 +6,7 @@
 const dataAccess = require("./data-access");
 
 const main = async () => {
-    let todolistId=1
-  let r = await dataAccess.getTask(todolistId);
+let r = await dataAccess.getTodoLists();
   console.log(r);
   process.exit();
 };
