@@ -6,12 +6,12 @@
 
 const { pool  } = require ('./postgres-pool')
 
-const TEST = 'select * from test'
+const GET_TODOLISTS = 'select * from todo_list'
 
- module.exports.test = async () => {
+ module.exports.getTodoLists = async () => {
     let retval = null;
     try {
-        let r = await pool.query(TEST);
+        let r = await pool.query(GET_TODOLISTS);
         retval = r.rows;
     } catch (err) {
         console.error(err);
