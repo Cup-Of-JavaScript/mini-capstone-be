@@ -22,11 +22,11 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors());
 
-//
-// GET /persons/:id
-//
 
-app.get('/ex1/persons/:id', cors(corsOptions), async (req, res) => { 
+
+
+
+
     // Parsing...
     // const id = req.params['id'];                 // Parse the path params from URL (e.g. /persons/1)
     // const queryParam1 = req.query['personType']  // Parse the query string from URL (e.g. ?personType=manager)
@@ -38,7 +38,7 @@ app.get('/ex1/persons/:id', cors(corsOptions), async (req, res) => {
     // Response...
     // res.status(404); // 201, 400, 403, etc.
     // res.send(<YOUR OBJECT HERE>);
-});
+
 
 
 //
@@ -48,6 +48,19 @@ app.get('/ex1/persons/:id', cors(corsOptions), async (req, res) => {
 app.get('/test', cors(corsOptions), async (req, res) => { 
     let r = await dataAccess.test();
     res.send(r);
+});
+
+//GET:/todolists/{id}/tasks
+app.get('/todolists/:id/tasks', cors(corsOptions), async (req, res) => { 
+    let todolistId = req.params['id'];
+    let result = await dataAccess.getTask(todolistId)
+    
+    if (result.length > 0) {
+        res.send(result);
+    } else {
+        res.status(204);
+        res.end();
+    }
 });
 
 app.listen(PORT, () => {
