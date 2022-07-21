@@ -37,6 +37,15 @@ app.get('/todolists/', cors(corsOptions), async (req,res) => {
       res.end()
     }
 });
+// POST: /todolists/
+
+app.post('/todolists/', cors(corsOptions), async (req, res) => { 
+    let newList = req.body
+    let result = await dataAccess.newList(newList.todoListName,newList.todoListId);
+    res.status(201)
+    res.send(result);
+});
+
 app.listen(PORT, () => {
     console.log(`Express API running on port: ${PORT}`);
 });
