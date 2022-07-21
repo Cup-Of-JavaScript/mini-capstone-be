@@ -6,7 +6,10 @@
 const dataAccess = require('./data-access');
 
 const main = async () => {
-    let r = await dataAccess.getTodoLists()
+    let statusId= 2
+    let taskId=29
+
+    let r = await dataAccess.putUpdateTable(statusId, taskId)
     console.log(r)
     process.exit()
 }
