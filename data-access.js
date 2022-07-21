@@ -26,6 +26,7 @@ const PUT_UPDATETABLE =
 `select tk.task_id, tk.task_name, tk.status_id, s.status_name 
 from task tk join status s on tk.status_id = s.status_id 
 where tk.task_id = $1;`
+const CREATE_TASK = 'INSERT INTO task (task_name, todo_list_id) VALUES ($1, $2) RETURNING task_id;'
 
 //  module.exports.test = async () => {
 //     let retval = null;
@@ -109,6 +110,17 @@ module.exports.putUpdateTable = async (statusId,taskId) => {
     try {
         let r = await pool.query(PUT_UPDATETABLE, [taskId]);
         retval = r.rows;
+    } catch (err) {
+        console.error(err);
+    }
+    return retval;
+}
+
+module.exports.createTask = async (taskName, todoListId) => {
+    let retval = null;
+    try {
+        let r = await pool.query(CREATE_TASK, [taskName, todoListId]);
+        retval = r.rows[0];
     } catch (err) {
         console.error(err);
     }

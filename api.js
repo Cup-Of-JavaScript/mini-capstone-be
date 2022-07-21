@@ -97,12 +97,21 @@ app.post('/todolists', cors(corsOptions), async (req, res) => {
     res.send(result);
 });
 
+//POST /todolists/:id/tasks
+app.post('/todolists/:id/tasks', cors(corsOptions), async (req, res) => { 
+    let newTask = req.body;
+    let newTodoListId = req.params['id'];
+    let r = await dataAccess.createTask(newTask.task_name, newTodoListId);
+    res.send(r);
+    res.status(201);
+});
+
+
 //UPDATE status
 app.put('/tasks/:id/', cors(corsOptions), async (req, res) => { 
     let statusId =req.params['id'];
     let updateTaskId = req.body;
     let result = await dataAccess.putUpdateTask([statusId, updateTaskId.taskId])
-    //taskName.statusId
     res.send(result)
 });
 
