@@ -18,6 +18,8 @@ from task tk
 where 
     tl.todo_list_id=$1`
 const GET_TODOLISTS = 'select * from todo_list'
+const DELETE_TODOLIST_IN_TASK='delete from task where todo_list_id = $1'
+const DELETE_TODOLIST = 'delete from todo_list where todo_list_id = $1 ;'
 
 //  module.exports.test = async () => {
 //     let retval = null;
@@ -51,3 +53,25 @@ module.exports.getTodoLists = async () => {
     }
     return retval
 }
+
+module.exports.deleteTodoListInTask = async(todolistId) =>{
+    let retval = null;
+    try {
+      let r = await pool.query(DELETE_TODOLIST_IN_TASK, [todolistId]);
+      retval = r.rows;
+    } catch (err) {
+      console.error(err);
+    }
+    return retval;
+   }
+
+   module.exports.deleteTodoList = async(todolistId) =>{
+    let retval = null;
+    try {
+      let r = await pool.query(DELETE_TODOLIST, [todolistId]);
+      retval = r.rows;
+    } catch (err) {
+      console.error(err);
+    }
+    return retval;
+   }
