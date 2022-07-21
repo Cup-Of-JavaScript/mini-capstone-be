@@ -23,7 +23,7 @@ app.use(express.urlencoded());
 app.use(cors());
 
 //
-// POST: /todolists/{id}/tasks
+// GET: /todolists/
 //
 
 
