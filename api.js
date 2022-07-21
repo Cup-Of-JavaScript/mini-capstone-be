@@ -97,6 +97,15 @@ app.post('/todolists', cors(corsOptions), async (req, res) => {
     res.send(result);
 });
 
+//UPDATE status
+app.put('/tasks/:id/', cors(corsOptions), async (req, res) => { 
+    let statusId =req.params['id'];
+    let updateTaskId = req.body;
+    let result = await dataAccess.putUpdateTask([statusId, updateTaskId.taskId])
+    //taskName.statusId
+    res.send(result)
+});
+
 app.listen(PORT, () => {
     console.log(`Express API running on port: ${PORT}`);
 });

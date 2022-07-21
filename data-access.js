@@ -21,8 +21,11 @@ const GET_TODOLISTS = 'select * from todo_list'
 const DELETE_TODOLIST_IN_TASK='delete from task where todo_list_id = $1'
 const DELETE_TODOLIST = 'delete from todo_list where todo_list_id = $1 ;'
 const CREATE_TODOLIST = 'INSERT INTO todo_list (todo_list_id,todo_list_name) VALUES ($1, $2) returning todo_list_id,todo_list_name;'
-
-
+const PUT_UPDATESTATUS = 'update task set status_id = $1 where task_id = $2 returning status_id;'
+const PUT_UPDATETABLE = 
+`select tk.task_id, tk.task_name, tk.status_id, s.status_name 
+from task tk join status s on tk.status_id = s.status_id 
+where tk.task_id = $1;`
 
 //  module.exports.test = async () => {
 //     let retval = null;
@@ -89,3 +92,25 @@ module.exports.deleteTodoListInTask = async(todolistId) =>{
      }
      return retval;
    };
+
+   module.exports.putUpdateTask = async (statusId,taskId) => {
+    let retval = null;
+    try {
+        let r = await pool.query(PUT_UPDATESTATUS, [statusId, taskId]);
+        retval = r.rows;
+    } catch (err) {
+        console.error(err);
+    }
+    return retval;
+}
+
+module.exports.putUpdateTable = async (statusId,taskId) => {
+    let retval = null;
+    try {
+        let r = await pool.query(PUT_UPDATETABLE, [taskId]);
+        retval = r.rows;
+    } catch (err) {
+        console.error(err);
+    }
+    return retval;
+}
