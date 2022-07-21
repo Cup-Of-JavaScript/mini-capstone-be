@@ -23,6 +23,19 @@ app.use(express.urlencoded());
 app.use(cors());
 
 //
+//INSERT TASK: /todolists/{id}/tasks
+//
+
+app.post('/todolists/:id/tasks', cors(corsOptions), async (req, res) => { 
+    let newTask = req.body;
+    let newTodoListId = req.params['id'];
+    let r = await dataAccess.createTask(newTask.task_name, newTodoListId);
+    res.send(r);
+});
+
+
+
+//
 // GET /persons/:id
 //
 
