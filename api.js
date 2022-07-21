@@ -27,7 +27,7 @@ app.use(cors());
 //
 
 
-app.post('/todolists/', cors(corsOptions), async (req,res) => {
+app.get('/todolists/', cors(corsOptions), async (req,res) => {
     let result = await dataAccess.getTodolists()
     if (result){
      console.log(200)
