@@ -17,6 +17,7 @@ from task tk
     join status s on s.status_id=tk.status_id
 where 
     tl.todo_list_id=$1`
+const GET_TODOLISTS = 'select * from todo_list'
 
 //  module.exports.test = async () => {
 //     let retval = null;
@@ -40,3 +41,13 @@ module.exports.getTask = async (todolistId) => {
     return retval;
 }
 
+module.exports.getTodoLists = async () => {
+    let retval = null;
+    try {
+       let r = await pool.query(GET_TODOLISTS);
+        retval = r.rows;
+    } catch (err) {
+        console.error(err);
+    }
+    return retval
+}
