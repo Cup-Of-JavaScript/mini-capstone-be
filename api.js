@@ -23,10 +23,6 @@ app.use(express.urlencoded());
 app.use(cors());
 
 
-
-
-
-
     // Parsing...
     // const id = req.params['id'];                 // Parse the path params from URL (e.g. /persons/1)
     // const queryParam1 = req.query['personType']  // Parse the query string from URL (e.g. ?personType=manager)
@@ -50,10 +46,13 @@ app.get('/test', cors(corsOptions), async (req, res) => {
     res.send(r);
 });
 
-//GET:/todolists/{id}/tasks
+//
+// ID 1. GET:/todolists/{id}/tasks
+//
+
 app.get('/todolists/:id/tasks', cors(corsOptions), async (req, res) => { 
     let todolistId = req.params['id'];
-    let result = await dataAccess.getTask(todolistId)
+    let result = await dataAccess.getTasks(todolistId)
     
     if (result.length > 0) {
         res.send(result);
@@ -63,7 +62,10 @@ app.get('/todolists/:id/tasks', cors(corsOptions), async (req, res) => {
     }
 });
 
-//GET:/todolists
+//
+// ID 2. GET:/todolists
+// 
+
 app.get('/todolists/', cors(corsOptions), async (req, res) => {
     let result = await dataAccess.getTodoLists()
     if (result.length > 0) {
@@ -75,29 +77,22 @@ app.get('/todolists/', cors(corsOptions), async (req, res) => {
     }
 });
 
-// DELETE /todolists/{id}
-app.delete('/todolists/:id', cors(corsOptions), async (req, res) => { 
-    let todolistId = req.params['id']
-    let result1 = await dataAccess.deleteTodoList(todolistId)
-    let result2 = await dataAccess.deleteTodoListInTask(todolistId)
-    //res.send("OK");
-    if (result1.length > 0) {
-        res.send("OK")
-    } else {
-        res.status(404)
-        res.end()
-    }
-   });
+//
+// ID 3. PUT /tasks/:id/
+//
 
-   // POST /todolists
-app.post('/todolists', cors(corsOptions), async (req, res) => { 
-    let newTodolist = req.body;
-    let result = await dataAccess.newTodolist( newTodolist.todolistName)
-    res.status(201)
-    res.send(result);
+app.put('/tasks/:id/', cors(corsOptions), async (req, res) => { 
+    let taskId = req.params['id'];
+    let status = req.body;
+    let result = await dataAccess.putUpdateTask(status.status_id, taskId)
+    res.send(result[0])
+    res.status(200);
 });
 
-//POST /todolists/:id/tasks
+//
+// ID 4. POST /todolists/:id/tasks
+//
+
 app.post('/todolists/:id/tasks', cors(corsOptions), async (req, res) => { 
     let newTask = req.body;
     let newTodoListId = req.params['id'];
@@ -106,23 +101,28 @@ app.post('/todolists/:id/tasks', cors(corsOptions), async (req, res) => {
     res.status(201);
 });
 
-//UPDATE status
-app.put('/tasks/:id/', cors(corsOptions), async (req, res) => { 
-    let statusId =req.params['id'];
-    let updateTaskId = req.body;
-    let result = await dataAccess.putUpdateTask([statusId, updateTaskId.taskId])
-    res.send(result)
+//
+// ID 5. POST /todolists
+//
+
+app.post('/todolists', cors(corsOptions), async (req, res) => { 
+    let name = req.body.name
+    let result = await dataAccess.newTodolist(name)
+    res.status(201)
+    res.send(result);
 });
 
-//PUT /tasks/:id/
-app.put('/tasks/:id/', cors(corsOptions), async (req, res) => { 
-    let statusId =req.params['id'];
-    let updateTaskId = req.body;
-    let result = await dataAccess.putUpdateTask([statusId, updateTaskId.taskId])
-    res.send(result)
-    res.status(200);
+//
+// ID 6. DELETE /todolists/{id}
+// 
+
+app.delete('/todolists/:id', cors(corsOptions), async (req, res) => { 
+    let todolistId = req.params['id']
+    let result1 = await dataAccess.deleteTodoList(todolistId)
+    let result2 = await dataAccess.deleteTodoListInTask(todolistId)
+    res.send("OK");
 });
 
 app.listen(PORT, () => {
-    console.log(`Express API running on port: ${PORT}`);
+    console.log(`TodoList API running on port: ${PORT}`);
 });

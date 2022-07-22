@@ -6,9 +6,9 @@
 const dataAccess = require("./data-access");
 
 const main = async () => {
-    let statusId= 2
-    let taskId=29
-    let r = await dataAccess.putUpdateTable(statusId, taskId)
+    let statusId= 1
+    let taskId=51
+    let r = await dataAccess.putUpdateTask(statusId, taskId)
   console.log(r);
   process.exit();
 };
