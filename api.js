@@ -85,8 +85,13 @@ app.put('/tasks/:id/', cors(corsOptions), async (req, res) => {
     let taskId = req.params['id'];
     let status = req.body;
     let result = await dataAccess.putUpdateTask(status.status_id, taskId)
-    res.send(result[0])
-    res.status(200);
+    if (result == null) {
+        res.status(404);
+        res.end()
+    } else {
+        res.send(result)
+    }
+ 
 });
 
 //

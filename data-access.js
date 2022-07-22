@@ -9,11 +9,23 @@ const { pool  } = require ('./postgres-pool')
 const TEST = 'select * from test'
 const GET_TASK = 'select task_id, task_name as name, status_id from task where todo_list_id=$1'
 const GET_TODOLISTS = 'select todo_list_id, todo_list_name as name from todo_list'
+const GET_TASK_FOR_TASK_ID = `
+    select 
+    task_id,
+    t.status_id,
+    task_name,
+    s.status_name
+    from task t
+    join status s on t.status_id = s.status_id
+    where 
+    t.task_id = $1
+  `
 const DELETE_TODOLIST_IN_TASK='delete from task where todo_list_id = $1'
 const DELETE_TODOLIST = 'delete from todo_list where todo_list_id = $1 ;'
 const CREATE_TODOLIST = 'INSERT INTO todo_list (todo_list_name) VALUES ($1) returning todo_list_id, todo_list_name as name;'
 const CREATE_TASK = 'INSERT INTO task (task_name, todo_list_id, status_id) VALUES ($1, $2, 1) RETURNING task_id, task_name;'
 const PUT_UPDATE_STATUS = 'update task set status_id = $1 where task_id = $2 returning status_id;'
+
 
 module.exports.test = async () => {
     let retval = null;
@@ -96,7 +108,10 @@ module.exports.putUpdateTask = async (statusId, taskId) => {
     let retval = null;
     try {
         let r = await pool.query(PUT_UPDATE_STATUS, [statusId, taskId]);
-        retval = r.rows;
+        if (r.rows.length > 0) {
+            let results = await pool.query(GET_TASK_FOR_TASK_ID, [taskId]);
+            retval = results.rows[0];
+        }
     } catch (err) {
         console.error(err);
     }
