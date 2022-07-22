@@ -107,9 +107,9 @@ app.post('/todolists', cors(corsOptions), async (req, res) => {
 
 app.delete('/todolists/:id', cors(corsOptions), async (req, res) => { 
     let todolistId = req.params['id']
-    let result1 = await dataAccess.deleteTodoList(todolistId)
-    let result2 = await dataAccess.deleteTodoListInTask(todolistId)
-    res.send("OK");
+    await dataAccess.deleteFromTaskForTodoList(todolistId)
+    await dataAccess.deleteTodoList(todolistId)
+    res.send({status: "ok"});
 });
 
 app.listen(PORT, () => {
