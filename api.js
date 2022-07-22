@@ -121,8 +121,14 @@ app.put('/tasks/:id/', cors(corsOptions), async (req, res) => {
     let result = await dataAccess.putUpdateTask([statusId, updateTaskId.taskId])
     res.send(result)
     res.status(200);
+
+
 });
 
 app.listen(PORT, () => {
     console.log(`Express API running on port: ${PORT}`);
 });
+
+
+
+
