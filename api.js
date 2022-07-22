@@ -92,7 +92,7 @@ app.delete('/todolists/:id', cors(corsOptions), async (req, res) => {
    // POST /todolists
 app.post('/todolists', cors(corsOptions), async (req, res) => { 
     let newTodolist = req.body;
-    let result = await dataAccess.newTodolist(newTodolist.todolistId, newTodolist.todolistName)
+    let result = await dataAccess.newTodolist( newTodolist.todolistName)
     res.status(201)
     res.send(result);
 });
@@ -104,6 +104,14 @@ app.post('/todolists/:id/tasks', cors(corsOptions), async (req, res) => {
     let r = await dataAccess.createTask(newTask.task_name, newTodoListId);
     res.send(r);
     res.status(201);
+});
+
+//UPDATE status
+app.put('/tasks/:id/', cors(corsOptions), async (req, res) => { 
+    let statusId =req.params['id'];
+    let updateTaskId = req.body;
+    let result = await dataAccess.putUpdateTask([statusId, updateTaskId.taskId])
+    res.send(result)
 });
 
 //PUT /tasks/:id/
