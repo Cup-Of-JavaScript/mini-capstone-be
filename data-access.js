@@ -2,11 +2,14 @@
 // File: data-access.js
 // Date: 7/22/2022
 // Desc: CommonJS module that contains our data access code.
+//       Methods indicated by Public are exposed by the API.  Private 
+//       methods are not.
 //
 
 const { pool  } = require ('./postgres-pool')
 
 const TEST = 'select * from test'
+const GET_TODOLIST = 'select * from todo_list where todo_list_id = $1'
 const GET_TASK = 'select task_id, task_name as name, status_id from task where todo_list_id=$1'
 const GET_TODOLISTS = 'select todo_list_id, todo_list_name as name from todo_list'
 const GET_TASK_FOR_TASK_ID = `
@@ -26,6 +29,9 @@ const CREATE_TODOLIST = 'INSERT INTO todo_list (todo_list_name) VALUES ($1) retu
 const CREATE_TASK = 'INSERT INTO task (task_name, todo_list_id, status_id) VALUES ($1, $2, 1) RETURNING task_id, task_name;'
 const PUT_UPDATE_STATUS = 'update task set status_id = $1 where task_id = $2 returning status_id;'
 
+//
+// Public
+//
 
 module.exports.test = async () => {
     let retval = null;
@@ -111,6 +117,24 @@ module.exports.putUpdateTask = async (statusId, taskId) => {
         if (r.rows.length > 0) {
             let results = await pool.query(GET_TASK_FOR_TASK_ID, [taskId]);
             retval = results.rows[0];
+        }
+    } catch (err) {
+        console.error(err);
+    }
+    return retval;
+}
+
+//
+// Private
+//
+
+module.exports.getTodoList = async (todoListId) => {
+    let retval = null;
+    try {
+        let r = await pool.query(GET_TODOLIST, [todoListId]);
+        retval = r.rows[0]
+        if (!retval) {
+            retval = null
         }
     } catch (err) {
         console.error(err);
