@@ -1,6 +1,6 @@
 //
 // File: data-access.js
-// Date: 7/15/2022
+// Date: 7/22/2022
 // Desc: CommonJS module that contains our data access code.
 //
 
@@ -21,8 +21,11 @@ const GET_TODOLISTS = 'select * from todo_list'
 const DELETE_TODOLIST_IN_TASK='delete from task where todo_list_id = $1'
 const DELETE_TODOLIST = 'delete from todo_list where todo_list_id = $1 ;'
 const CREATE_TODOLIST = 'INSERT INTO todo_list (todo_list_name) VALUES ($1) returning todo_list_name;'
-const PUT_UPDATESTATUS = 'update task set status_id = $1 where task_id = $2 returning status_id;'
 const CREATE_TASK = 'INSERT INTO task (task_name, todo_list_id) VALUES ($1, $2) RETURNING task_id;'
+const PUT_UPDATESTATUS = 'update task set status_id = $1 where task_id = $2 returning status_id;'
+
+
+
 
 //  module.exports.test = async () => {
 //     let retval = null;
@@ -112,3 +115,5 @@ module.exports.createTask = async (taskName, todoListId) => {
     }
     return retval;
 }
+
+
