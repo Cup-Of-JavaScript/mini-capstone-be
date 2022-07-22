@@ -22,25 +22,6 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors());
 
-
-
-
-
-
-    // Parsing...
-    // const id = req.params['id'];                 // Parse the path params from URL (e.g. /persons/1)
-    // const queryParam1 = req.query['personType']  // Parse the query string from URL (e.g. ?personType=manager)
-    // const body = req.body;                       // Parse the the body from the request
-    
-    // Data access & business logic...
-    // const result = await dataAccess.<YOUR FUNCTION HERE>
-    
-    // Response...
-    // res.status(404); // 201, 400, 403, etc.
-    // res.send(<YOUR OBJECT HERE>);
-
-
-
 //
 // GET: /test
 //
@@ -50,10 +31,13 @@ app.get('/test', cors(corsOptions), async (req, res) => {
     res.send(r);
 });
 
-//GET:/todolists/{id}/tasks
+//
+// ID 1. GET:/todolists/{id}/tasks
+//
+
 app.get('/todolists/:id/tasks', cors(corsOptions), async (req, res) => { 
     let todolistId = req.params['id'];
-    let result = await dataAccess.getTask(todolistId)
+    let result = await dataAccess.getTasks(todolistId)
     
     if (result.length > 0) {
         res.send(result);
@@ -63,7 +47,10 @@ app.get('/todolists/:id/tasks', cors(corsOptions), async (req, res) => {
     }
 });
 
-//GET:/todolists
+//
+// ID 2. GET:/todolists
+// 
+
 app.get('/todolists/', cors(corsOptions), async (req, res) => {
     let result = await dataAccess.getTodoLists()
     if (result.length > 0) {
@@ -71,33 +58,30 @@ app.get('/todolists/', cors(corsOptions), async (req, res) => {
     } else {
         res.status(204)
         res.end()
-
     }
 });
 
-// DELETE /todolists/{id}
-app.delete('/todolists/:id', cors(corsOptions), async (req, res) => { 
-    let todolistId = req.params['id']
-    let result1 = await dataAccess.deleteTodoList(todolistId)
-    let result2 = await dataAccess.deleteTodoListInTask(todolistId)
-    //res.send("OK");
-    if (result1.length > 0) {
-        res.send("OK")
-    } else {
-        res.status(404)
+//
+// ID 3. PUT /tasks/:id/
+//
+
+app.put('/tasks/:id/', cors(corsOptions), async (req, res) => { 
+    let taskId = req.params['id'];
+    let status = req.body;
+    let result = await dataAccess.putUpdateTask(status.status_id, taskId)
+    if (result == null) {
+        res.status(404);
         res.end()
+    } else {
+        res.send(result)
     }
-   });
-
-   // POST /todolists
-app.post('/todolists', cors(corsOptions), async (req, res) => { 
-    let newTodolist = req.body;
-    let result = await dataAccess.newTodolist(newTodolist.todolistId, newTodolist.todolistName)
-    res.status(201)
-    res.send(result);
+ 
 });
 
-//POST /todolists/:id/tasks
+//
+// ID 4. POST /todolists/:id/tasks
+//
+
 app.post('/todolists/:id/tasks', cors(corsOptions), async (req, res) => { 
     let newTask = req.body;
     let newTodoListId = req.params['id'];
@@ -106,15 +90,34 @@ app.post('/todolists/:id/tasks', cors(corsOptions), async (req, res) => {
     res.status(201);
 });
 
-//PUT /tasks/:id/
-app.put('/tasks/:id/', cors(corsOptions), async (req, res) => { 
-    let statusId =req.params['id'];
-    let updateTaskId = req.body;
-    let result = await dataAccess.putUpdateTask([statusId, updateTaskId.taskId])
-    res.send(result)
-    res.status(200);
+//
+// ID 5. POST /todolists
+//
+
+app.post('/todolists', cors(corsOptions), async (req, res) => { 
+    let name = req.body.name
+    let result = await dataAccess.newTodolist(name)
+    res.status(201)
+    res.send(result);
+});
+
+//
+// ID 6. DELETE /todolists/{id}
+// 
+
+app.delete('/todolists/:id', cors(corsOptions), async (req, res) => { 
+    let todolistId = req.params['id']
+    let todoList = await dataAccess.getTodoList(todolistId);
+    if (todoList == null) {
+        res.status(404)
+        res.end();
+    } else {
+        await dataAccess.deleteFromTaskForTodoList(todolistId)
+        await dataAccess.deleteTodoList(todolistId)
+        res.send({status: "ok"});
+    }
 });
 
 app.listen(PORT, () => {
-    console.log(`Express API running on port: ${PORT}`);
+    console.log(`TodoList API running on port: ${PORT}`);
 });

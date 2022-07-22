@@ -6,9 +6,9 @@
 const dataAccess = require("./data-access");
 
 const main = async () => {
-    let todolistId = 8
-    let todolistName = 'Monday night'
-let r = await dataAccess.newTodolist(todolistId, todolistName);
+  let statusId = 1
+  let taskId = 55
+  let r = await dataAccess.getTodoList(11)
   console.log(r);
   process.exit();
 };
